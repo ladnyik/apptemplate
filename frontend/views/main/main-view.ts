@@ -14,9 +14,11 @@ import { Layout } from '../view';
 import styles from './main-view.css';
 import { Router } from '@vaadin/router';
 import { getMenu } from "../../generated/MenuEndPoint";
-import '@vaadin/vaadin-login/vaadin-login-overlay';
-import {LoginOverlayElement, LoginI18n } from '@vaadin/vaadin-login'
+//import '@vaadin/vaadin-login/vaadin-login-overlay';
+//import {LoginOverlayElement, LoginI18n } from '@vaadin/vaadin-login'
 import { userLogin } from "../../generated/LoginEndPoint";
+import '../../mycomponent/my-vaadin-login/vaadin-login-overlay';
+import {LoginOverlayElement, LoginI18n } from '../../mycomponent/my-vaadin-login'
 
 interface RouteInfo {
   path: string;
@@ -42,7 +44,7 @@ export class MainView extends Layout {
   private i18n: LoginI18n = 
 	{
     	"form": {
-    	    "title": "Log in1",
+    	    "title": "Log in",
         	"username": "Username",
         	"password": "Password",
         	"submit": "Log in",
@@ -60,6 +62,12 @@ export class MainView extends Layout {
 
   @internalProperty()
   private header = "Header";
+
+  @internalProperty()
+  errorTitle: String = 'Incorrect username or password';
+
+  @internalProperty()
+  errorMessage: String = 'Check that you have entered the correct username and password and try again.';
 		
   static get styles() {
     return [styles];
@@ -67,7 +75,11 @@ export class MainView extends Layout {
 	
   render() {
     return html`
-      <vaadin-login-overlay id="login" .opened=${this.loginOpened} .i18n=${this.i18n} description=${this.loginDescription}>
+      <vaadin-login-overlay id="login" .opened=${this.loginOpened} .i18n=${this.i18n} 
+			description=${this.loginDescription} 
+			errortitle=${this.errorTitle} 
+			errormessage=${this.errorMessage} 
+			>
        <h1 slot="title">${this.header}</h1> 
       </vaadin-login-overlay>
       <vaadin-app-layout primary-section="drawer">
@@ -93,7 +105,6 @@ export class MainView extends Layout {
 		{
 			this.loginOpened=false;
 			this.login.error = false;
-			this.i18n.errorMessage.message = 'csaá';
 		}
 	);	
   }
@@ -103,8 +114,9 @@ export class MainView extends Layout {
 	if (!loginSuccess){
 		this.loginOpened = true;			
 		this.login.error = true;
-		this.header = 'csa';
-		this.loginDescription = 'csa1';	
+		//this.errorTitle = 'Error Title ' + this.counter;
+		//this.errorMessage ='Error Message ' + this.counter; 
+
 	}
 	else{
         this.loginOpened = false;
